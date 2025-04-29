@@ -16,6 +16,11 @@ data "scaleway_iam_ssh_key" "main" {
   name = "main"
 }
 
+data "scaleway_baremetal_os" "my_os" {
+  name="Ubuntu"
+  version="24.04 LTS (Noble Numbat)"
+}
+
 data "scaleway_baremetal_offer" "my_offer" {
   zone = "fr-par-2"
   name = "EM-I220E-NVME"
@@ -24,8 +29,8 @@ data "scaleway_baremetal_offer" "my_offer" {
 resource "scaleway_baremetal_server" "base" {
   zone		  = "fr-par-2"
   offer       = data.scaleway_baremetal_offer.my_offer.offer_id
-  os          = "d17d6872-0412-45d9-a198-af82c34d3c5c"
-  ssh_key_ids = [data.scaleway_account_ssh_key.main.id]
+  os          = data.scaleway_baremetal_os.my_os.id
+  ssh_key_ids = [data.scaleway_iam_ssh_key.main.id]
 }
 ```
 
